@@ -38,7 +38,7 @@ ul {
   @apply p-0 mt-8 flex flex-wrap;
 }
 li {
-  @apply block p-1 border-solid border-black border mr-2 text-xl font-bold;
+  @apply block p-1 border-solid border-black border mr-2 mb-2 text-xl font-bold;
 }
 button {
   @apply absolute top-0 right-0 mt-4 mr-4 bg-white border-solid border-2 border-black font-bold text-xl cursor-pointer;
