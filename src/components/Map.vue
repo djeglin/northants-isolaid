@@ -76,6 +76,9 @@ export default class Map extends Vue {
   }
 
   dropPin(e) {
+    this.areas.forEach(area => {
+      area.color = '#000000'
+    })
     // console.log(e)
     const lat = e.latLng.lat()
     const lng = e.latLng.lng()
