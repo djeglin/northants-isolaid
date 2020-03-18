@@ -18,6 +18,10 @@
           lng: point.longitude,
         }))
       "
+      :options="{
+        strokeColor: area.color,
+        fillColor: area.color
+      }"
       :strokeColor="area.color"
       strokeOpacity="0.9"
       :fillColor="area.color"
@@ -37,7 +41,25 @@ import Vue from 'vue'
 import Component from 'vue-class-component'
 import axios from 'axios'
 
-@Component
+@Component({
+  props: {
+    hidePin: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  watch: {
+    hidePin: function(val) {
+      if (val) {
+        this.pin.lat = null
+        this.pin.lng = null
+        this.areas.forEach(area => {
+          area.color = '#000000'
+        })
+      }
+    },
+  },
+})
 export default class Map extends Vue {
   areas = []
   center = { lat: 52.238865, lng: -0.903705 }
@@ -60,6 +82,47 @@ export default class Map extends Vue {
     this.pin.lat = lat
     this.pin.lng = lng
     this.$refs.map.panTo({ lat, lng })
+
+    this.findIntersectingPolys()
+  }
+
+  findIntersectingPolys() {
+    const polys = this.areas.map(area => {
+      return [
+        area.userId,
+        area.points.map(point => [point.latitude, point.longitude]),
+      ]
+    })
+    const point = [this.pin.lat, this.pin.lng]
+    const intersecting = polys.filter(poly => this.inside(point, poly[1]))
+    // console.log(intersecting)
+
+    intersecting.forEach(poly => {
+      this.areas.find(area => area.userId === poly[0]).color = '#FF0000'
+    })
+
+    this.$emit('dropPin', intersecting)
+  }
+
+  inside(point, vs) {
+    // ray-casting algorithm based on
+    // http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html
+
+    const x = point[0]
+    const y = point[1]
+
+    let inside = false
+    for (let i = 0, j = vs.length - 1; i < vs.length; j = i++) {
+      const xi = vs[i][0]
+      const yi = vs[i][1]
+      const xj = vs[j][0]
+      const yj = vs[j][1]
+
+      const intersect =
+        yi > y != yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi
+      if (intersect) inside = !inside
+    }
+    return inside
   }
 }
 </script>
