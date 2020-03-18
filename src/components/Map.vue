@@ -10,7 +10,12 @@
     <GmapPolygon
       v-for="(area, index) in areas"
       :key="index"
-      :paths="area.points.map(point => ({lat:point.latitude, lng:point.longitude}))"
+      :paths="
+        area.points.map(point => ({
+          lat: point.latitude,
+          lng: point.longitude,
+        }))
+      "
     >
     </GmapPolygon>
   </GmapMap>
@@ -30,12 +35,10 @@ export default class Map extends Vue {
     const res = await axios.get('/.netlify/functions/getAreas')
     const areas = res.data.areas
     this.areas.push(...areas)
-    console.log(this.areas)
   }
 
   getPathsForArea(area) {
     const points = area.points
-    console.log(points)
     const gPoints = points.map(point =>
       this.google.maps.LatLng(point.latitude, point.longitude)
     )
