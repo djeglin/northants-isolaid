@@ -1,7 +1,7 @@
 <template>
   <main>
     <Header />
-    <Map />
+    <Body />
     <Footer />
   </main>
 </template>
@@ -12,13 +12,13 @@ import Component from 'vue-class-component'
 
 // @ is an alias to /src
 import Header from '@/components/Header'
-import Map from '@/components/Map'
+import Body from '@/components/Body'
 import Footer from '@/components/Footer'
 
 @Component({
   components: {
     Header,
-    Map,
+    Body,
     Footer,
   },
 })
