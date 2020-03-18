@@ -51,8 +51,11 @@ export default class Map extends Vue {
 }
 </script>
 
-<style scoped>
-.map {
+<style>
+.vue-map-container {
   @apply w-full flex-grow;
+}
+.vue-map-container .vue-map {
+  @apply absolute top-0 right-0 bottom-0 left-0
 }
 </style>

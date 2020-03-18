@@ -137,51 +137,6 @@ const mockData = [
     ],
   },
   {
-    userId: 9,
-    points: [
-      {
-        longitude: -1.093595,
-        latitude: 52.433734,
-      },
-      {
-        longitude: -1.020124,
-        latitude: 52.433734,
-      },
-      {
-        longitude: -1.024244,
-        latitude: 52.402325,
-      },
-      {
-        longitude: -1.094281,
-        latitude: 52.403163,
-      },
-      {
-        longitude: -76.58232,
-        latitude: 44.26819,
-      },
-      {
-        longitude: -0.96324,
-        latitude: 52.24706,
-      },
-      {
-        longitude: -0.96613,
-        latitude: 52.248319,
-      },
-      {
-        longitude: -0.953342,
-        latitude: 52.247557,
-      },
-      {
-        longitude: -0.954801,
-        latitude: 52.243116,
-      },
-      {
-        longitude: -0.963341,
-        latitude: 52.241776,
-      },
-    ],
-  },
-  {
     userId: 10,
     points: [
       {
