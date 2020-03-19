@@ -184,7 +184,7 @@ export default class Map extends Vue {
   @apply w-full;
 }
 .search {
-  @apply absolute top-0 left-0 mt-4 ml-4 max-w-xs z-50 w-full shadow-md;
+  @apply absolute top-0 left-0 mt-6 ml-6 max-w-xs z-50 w-full shadow-md;
 }
 .search input {
   @apply block w-full text-lg p-2;
