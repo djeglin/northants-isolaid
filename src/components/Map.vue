@@ -9,6 +9,15 @@
     @click="dropPin"
     ref="map"
   >
+    <div class="searchWrapper" slot="visible">
+      <div class="search">
+        <GmapAutocomplete
+          placeholder="Search for a postcode or area"
+          @place_changed="setPlace"
+        />
+      </div>
+    </div>
+
     <GmapPolygon
       v-for="area in areas"
       :key="area.userId"
@@ -119,6 +128,13 @@ export default class Map extends Vue {
     this.findIntersectingPolys()
   }
 
+  setPlace(place) {
+    this.pin.lat = place.geometry.location.lat()
+    this.pin.lng = place.geometry.location.lng()
+    this.$refs.map.panTo({lat: this.pin.lat, lng: this.pin.lng})
+    this.findIntersectingPolys()
+  }
+
   findIntersectingPolys() {
     const polys = this.areas.map(area => {
       return [
@@ -163,5 +179,14 @@ export default class Map extends Vue {
 }
 .vue-map-container .vue-map {
   @apply absolute top-0 right-0 bottom-0 left-0;
+}
+.searchWrapper {
+  @apply w-full;
+}
+.search {
+  @apply absolute top-0 left-0 mt-4 ml-4 max-w-xs z-50 w-full;
+}
+.search input {
+  @apply block w-full text-lg p-2;
 }
 </style>
