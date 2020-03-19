@@ -2,11 +2,11 @@
 This project allows the Northampton Mutual Aid group to explore the areas covered by volunteers offering to help in the community. Areas each have an array of coordinates and an ID. These IDs are for cross-referencing by the group admins so we don't risk exposing any PII data.
 
 ## Project stack overview
-* *VueJS* The UI library being used to build this
-* *Vue-CLU* Configuration and scaffolding
-* *TailwindCSS* (in shadow mode) for styling without actually having to write much CSS
-* *vue2-google-maps* to handle the heavy lifting of the gMaps API
-* *Netlify* handles continuous deployment, lambda functions and static hosting
+* **VueJS** The UI library being used to build this
+* **Vue-CLU** Configuration and scaffolding
+* **TailwindCSS** (in shadow mode) for styling without actually having to write much CSS
+* **vue2-google-maps** to handle the heavy lifting of the gMaps API
+* **Netlify** handles continuous deployment, lambda functions and static hosting
 
 That's about it, really. Its a stupidly simply little project. There's much still to do, but it works.
 
