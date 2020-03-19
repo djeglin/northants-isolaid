@@ -3,7 +3,14 @@
     <button @click="close"><span>Close</span>X</button>
     <h2>Area IDs containing selected point:</h2>
     <ul>
-      <li v-for="area in areas" :key="area[0]">{{ area[0] }}</li>
+      <li
+        v-for="area in areas"
+        :key="area[0]"
+        @mouseover="setTargetArea(area)"
+        @mouseout="setTargetArea(null)"
+      >
+        {{ area[0] }}
+      </li>
     </ul>
   </aside>
 </template>
@@ -21,6 +28,17 @@ import Component from 'vue-class-component'
   },
 })
 export default class Sidebar extends Vue {
+  targetArea = null
+
+  setTargetArea(area) {
+    if (area === null) {
+      this.targetArea = null
+    } else {
+      this.targetArea = area[0]
+    }
+    this.$emit('setTargetArea', this.targetArea)
+  }
+
   close() {
     this.$emit('close')
   }
@@ -38,7 +56,10 @@ ul {
   @apply p-0 mt-8 flex flex-wrap;
 }
 li {
-  @apply block p-1 border-solid border-black border mr-2 mb-2 text-xl font-bold;
+  @apply block p-1 border-solid border-black border mr-2 mb-2 text-xl font-bold cursor-pointer;
+}
+li:hover {
+  background-color: #00ff0099;
 }
 button {
   @apply absolute top-0 right-0 mt-4 mr-4 bg-white border-solid border-2 border-black font-bold text-xl cursor-pointer;

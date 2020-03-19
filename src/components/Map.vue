@@ -19,8 +19,21 @@
         }))
       "
       :options="{
-        strokeColor: area.color,
-        fillColor: area.color
+        strokeColor: '#000000',
+        fillColor: intersecting.map(item => item[0]).includes(area.userId)
+          ? '#00CC00'
+          : '#000000',
+        strokeOpacity: intersecting.length
+          ? intersecting.map(item => item[0]).includes(area.userId)
+            ? 0.5
+            : 0
+          : 0.5,
+        fillOpacity: intersecting.length
+          ? intersecting.map(item => item[0]).includes(area.userId)
+            ? 0.05
+            : 0
+          : 0.05,
+        strokeWeight: 2,
       }"
       :strokeColor="area.color"
       strokeOpacity="0.9"
@@ -47,6 +60,10 @@ import axios from 'axios'
       type: Boolean,
       default: false,
     },
+    targetArea: {
+      type: Number,
+      default: null,
+    },
   },
   watch: {
     hidePin: function(val) {
@@ -56,6 +73,24 @@ import axios from 'axios'
         this.areas.forEach(area => {
           area.color = '#000000'
         })
+        this.intersecting = []
+        this.tempIntersecting = []
+      }
+    },
+    targetArea: function(val) {
+      if (val && val !== null) {
+        this.tempIntersecting = [...this.intersecting]
+        const area = this.areas.find(area => area.userId === val)
+        this.intersecting = [
+          [
+            area.userId,
+            area.points.map(point => [point.latitude, point.longitude]),
+          ],
+        ]
+        // console.log(this.intersecting)
+      }
+      if (val === null) {
+        this.intersecting = this.tempIntersecting
       }
     },
   },
@@ -65,20 +100,15 @@ export default class Map extends Vue {
   center = { lat: 52.238865, lng: -0.903705 }
   pin = { lat: null, lng: null }
   geometry = null
+  intersecting = []
 
   async created() {
     const res = await axios.get('/.netlify/functions/getAreas')
     const areas = res.data.areas
-    areas.forEach(area => {
-      area.color = '#000000'
-    })
     this.areas.push(...areas)
   }
 
   dropPin(e) {
-    this.areas.forEach(area => {
-      area.color = '#000000'
-    })
     // console.log(e)
     const lat = e.latLng.lat()
     const lng = e.latLng.lng()
@@ -99,10 +129,7 @@ export default class Map extends Vue {
     const point = [this.pin.lat, this.pin.lng]
     const intersecting = polys.filter(poly => this.inside(point, poly[1]))
     // console.log(intersecting)
-
-    intersecting.forEach(poly => {
-      this.areas.find(area => area.userId === poly[0]).color = '#FF0000'
-    })
+    this.intersecting = intersecting
 
     this.$emit('dropPin', intersecting)
   }
