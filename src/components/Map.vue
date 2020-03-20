@@ -19,7 +19,7 @@
     </div>
 
     <GmapPolygon
-      v-for="area in areas"
+      v-for="area in filteredAreas"
       :key="area.userId"
       :paths="
         area.points.map(point => ({
@@ -65,6 +65,14 @@ import axios from 'axios'
 
 @Component({
   props: {
+    minArea: {
+      type: Number,
+      required: true,
+    },
+    maxArea: {
+      type: Number,
+      required: true,
+    },
     hidePin: {
       type: Boolean,
       default: false,
@@ -89,7 +97,7 @@ import axios from 'axios'
     targetArea: function(val) {
       if (val && val !== null) {
         this.tempIntersecting = [...this.intersecting]
-        const area = this.areas.find(area => area.userId === val)
+        const area = this.filteredAreas.find(area => area.userId === val)
         this.intersecting = [
           [
             area.userId,
@@ -110,11 +118,41 @@ export default class Map extends Vue {
   pin = { lat: null, lng: null }
   geometry = null
   intersecting = []
+  interval = null
 
   async created() {
     const res = await axios.get('/.netlify/functions/getAreas')
     const areas = res.data.areas
     this.areas.push(...areas)
+
+    this.interval = setInterval(() => {
+      this.computeAreas()
+    }, 100)
+  }
+
+  get filteredAreas() {
+    if (!this.areas.length) return this.areas
+    return this.areas.filter(
+      area => area.area >= this.minArea && area.area <= this.maxArea
+    )
+  }
+
+  computeAreas() {
+    if (window.google && window.google.maps && this.areas.length) {
+      clearInterval(this.interval)
+      const areas = [...this.areas]
+      areas.forEach(area => {
+        const path = area.points.map(
+          point =>
+            new window.google.maps.LatLng(point.latitude, point.longitude)
+        )
+        const computedArea = window.google.maps.geometry.spherical.computeArea(
+          path
+        )
+        area.area = computedArea
+      })
+      this.areas = [...areas]
+    }
   }
 
   dropPin(e) {
@@ -131,12 +169,12 @@ export default class Map extends Vue {
   setPlace(place) {
     this.pin.lat = place.geometry.location.lat()
     this.pin.lng = place.geometry.location.lng()
-    this.$refs.map.panTo({lat: this.pin.lat, lng: this.pin.lng})
+    this.$refs.map.panTo({ lat: this.pin.lat, lng: this.pin.lng })
     this.findIntersectingPolys()
   }
 
   findIntersectingPolys() {
-    const polys = this.areas.map(area => {
+    const polys = this.filteredAreas.map(area => {
       return [
         area.userId,
         area.points.map(point => [point.latitude, point.longitude]),
