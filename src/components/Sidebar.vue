@@ -4,7 +4,7 @@
     <h2>Area IDs containing selected point:</h2>
     <ul>
       <li
-        v-for="area in areas"
+        v-for="area in filteredAreas"
         :key="area[0]"
         @mouseover="setTargetArea(area)"
         @mouseout="setTargetArea(null)"
@@ -25,10 +25,25 @@ import Component from 'vue-class-component'
       type: Array,
       default: () => [],
     },
+    minArea: {
+      type: Number,
+      required: true,
+    },
+    maxArea: {
+      type: Number,
+      required: true,
+    },
   },
 })
 export default class Sidebar extends Vue {
   targetArea = null
+
+  get filteredAreas() {
+    if (!this.areas.length) return this.areas
+    return this.areas.filter(
+      area => area[2] >= this.minArea && area[2] <= this.maxArea
+    )
+  }
 
   setTargetArea(area) {
     if (area === null) {

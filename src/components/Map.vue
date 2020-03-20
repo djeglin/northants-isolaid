@@ -97,7 +97,7 @@ import axios from 'axios'
     targetArea: function(val) {
       if (val && val !== null) {
         this.tempIntersecting = [...this.intersecting]
-        const area = this.filteredAreas.find(area => area.userId === val)
+        const area = this.areas.find(area => area.userId === val)
         this.intersecting = [
           [
             area.userId,
@@ -179,6 +179,7 @@ export default class Map extends Vue {
       return [
         area.userId,
         area.points.map(point => [point.latitude, point.longitude]),
+        area.area
       ]
     })
     const point = [this.pin.lat, this.pin.lng]
