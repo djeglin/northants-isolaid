@@ -1,6 +1,12 @@
 <template>
   <div>
-    <Map @dropPin="updateAreas" :hidePin="hidePin" :targetArea="targetArea" />
+    <Map
+      @dropPin="updateAreas"
+      :hidePin="hidePin"
+      :targetArea="targetArea"
+      :minArea="minArea"
+      :maxArea="maxArea"
+    />
     <transition name="slideIn">
       <Sidebar
         v-if="areas && areas.length"
@@ -20,6 +26,17 @@ import Map from '@/components/Map'
 import Sidebar from '@/components/Sidebar'
 
 @Component({
+  props: {
+    minArea: {
+      type: Number,
+      required: true,
+    },
+    maxArea: {
+      type: Number,
+      required: true,
+    },
+  },
+
   components: {
     Map,
     Sidebar,
