@@ -122,6 +122,7 @@ export default class Map extends Vue {
 
   async created() {
     const res = await axios.get('/.netlify/functions/getAreas')
+    // console.log(res)
     const areas = res.data.areas
     this.areas.push(...areas)
 
