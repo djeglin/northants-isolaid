@@ -1,7 +1,8 @@
 <template>
   <div>
     <Map
-      @dropPin="updateAreas"
+      @dropPin="dropPin"
+      @updateAreas="updateAreas"
       :hidePin="hidePin"
       :targetArea="targetArea"
       :minArea="minArea"
@@ -11,6 +12,8 @@
       <Sidebar
         v-if="areas && areas.length"
         :areas="areas"
+        :minArea="minArea"
+        :maxArea="maxArea"
         @close="close"
         @setTargetArea="setTargetArea"
       />
@@ -48,8 +51,12 @@ export default class Body extends Vue {
 
   areas = () => []
 
-  updateAreas(arr) {
+  dropPin(arr) {
     this.hidePin = false
+    this.updateAreas(arr)
+  }
+
+  updateAreas(arr) {
     this.areas = [...arr]
   }
 
